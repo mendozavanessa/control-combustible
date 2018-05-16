@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script type="text/javascript" src="/assets/app/assets/plugins/form-ckeditor/ckeditor.js"></script>
+    <link rel="stylesheet" href="vendors/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="logistica/assets/css/logistica-efectos.css">
+    <div id="page-heading" xmlns="http://www.w3.org/1999/html">
+        <ol class="breadcrumb">
+            <li>
+                <a href="#/">Intranet</a>
+            </li>
+            <li>Logistica</li>
+            <li class="active">Solicitud de Cotización</li>
+        </ol>
+    </div>
+    <div class="container-fluid" ng-controller="LogisticaControlCombustibleController">
+        <div class="col-md-12">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h6 style="color: #f4f6f7">
+                        <i class="fa fa-file-o" style="padding-right: 3px"></i> Agregar
+                    </h6>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-12">
+                        <div class="col-md-12">
+                            <div class="col-md-4">
+                                <label class="control-label">Año:</label>
+                                <input type="number" class="form-control input-sm" ng-model="frmControlCombustible.anio" ng-change="frmControlCombustible.getOcCombustible()">
+                            </div>
+                            <div class="col-md-8">
+                                <label class="control-label">O/C:</label>
+                                <div class="input-group">
+                                    <select ui-select2 ng-model="frmControlCombustible.ing_orden_compra" ng-change="frmControlCombustible.cargar()" style="width: 100%">
+                                        <option ng-repeat="frm1 in frmControlCombustible.ordenescompracombo" value="{{ frm1.id_oc_control_combustible }}">O/C {{ frm1.nro_oc+' - '+ frm1.descripcion +' - '+frm1.anio }}
+                                        </option>
+                                    </select>
+                                    <div class="input-group-btn">
+                                        <div class="btn btn-success btn-sm" ng-click="abrirNuevoOc()">
+                                            <span class="fa fa-plus"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <br>
+                            <table class="table table-bordered table-condensed table-hover table-striped">
+                                <thead style="background: #63b7e6; font-size: 10px; font-family:Arial; color: white">
+                                    <tr>
+                                        <th width="50%" style="text-align: center">GRIFO</th>
+                                        <th width="25%" style="text-align: center">FECHA NOTIFICACION</th>
+                                        <th width="25%" style="text-align: center">CANTIDAD</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{frmControlCombustible.ing_grifo}}</td>
+                                        <td style="text-align: center">{{frmControlCombustible.ing_fecha_notificacion}}</td>
+                                        <td style="text-align: center">{{frmControlCombustible.ing_cantidad}} Gln</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-info">
+                <div class="panel-body">
+                    <div class="col-md-12">
+                        <h6 style="color: rgba(0,0,0,.3)">
+                            <i class="fa fa-list" style="padding-right: 3px"></i> Datos Importantes
+                        </h6>
+                        <div class="col-md-12">
+                            <label class="control-label">Fecha:</label>
+                            <input type="date" class="form-control input-sm" ng-model="frmControlCombustible.ing_fecha">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="control-label">Placa Vehiculo:</label>
+                            <div class="input-group">
+                                <select ui-select2 ng-model="frmControlCombustible.ing_placa" style="width: 100%">
+                                    <option ng-repeat="frm2 in frmControlCombustible.vehiculocombo" value="{{ frm2.placa_vehiculo }}">{{ frm2.placa_vehiculo }} - {{ frm2.tipo_combustible }}
+                                    </option>
+                                </select>
+                                <div class="input-group-btn">
+                                    <div class="btn btn-success btn-sm" ng-click="abrirNuevoVehiculo()">
+                                        <span class="fa fa-plus"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="control-label">Vale Usuario:</label>
+                            <input type="text" class="form-control input-sm" ng-model="frmControlCombustible.ing_vale_usuario" placeholder="Nro Vale Usuario">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="control-label">Nro Vale:</label>
+                            <input type="text" class="form-control input-sm" ng-model="frmControlCombustible.ing_nro_vale" placeholder="Nro Vale">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="control-label">Nro Pecosa:</label>
+                            <input type="text" class="form-control input-sm" ng-model="frmControlCombustible.ing_nro_pecosa" placeholder="Nro Pecosa">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="control-label">Salida:</label>
+                            <input type="text" class="form-control input-sm" ng-model="frmControlCombustible.ing_salida">
+                        </div>
+
+                        <div class="col-md-12" style="margin-bottom: 20px; margin-top: 20px">
+                            <a type="button" class="btn btn-success btn-sm pull-right" ng-click="frmControlCombustible.set()">
+                                <i class="fa fa-check"></i>Agregar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h6 style="color: #f4f6f7">
+                        <i class="fa fa-list" style="padding-right: 3px"></i> Reporte
+                        <a type="button" class="btn btn-success btn-xs pull-right" ng-click="frmControlCombustible.imprimirRequerimiento()">
+                            <i class="fa fa-print"></i>Imprimir
+                        </a>
+                        <a type="button" class="btn btn-magenta btn-xs pull-right" ng-click="openAddModalReporte()">
+                            <i class="fa fa-print"></i>Reporte Anual
+                        </a>
+                    </h6>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-hover table-striped">
+                            <thead>
+                                <tr style="background: #63b7e6; font-size: 10px; font-family:Arial; color: white">
+                                    <th style="text-align: center" width="12%">FECHA</th>
+                                    <th style="text-align: center" width="12%">NRO PECOSA</th>
+                                    <th style="text-align: center" width="12%">VALE USUARIO</th>
+                                    <th style="text-align: center" width="12%">NRO NALE</th>
+                                    <th style="text-align: center" width="14%">PLACA</th>
+                                    <th style="text-align: center" width="14%">SALIDA</th>
+                                    <th style="text-align: center" width="14%">SALDO</th>
+                                    <th style="text-align: center" width="10%">ACCIONES</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="currentAcceso in frmControlCombustible.detallescombustibles">
+                                    <td style="text-align: center">{{ currentAcceso.fecha }}</td>
+                                    <td style="text-align: center">{{ currentAcceso.nro_pecosa }}</td>
+                                    <td style="text-align: center">{{ currentAcceso.vale_usuario }}</td>
+                                    <td style="text-align: center">{{ currentAcceso.nro_vale }}</td>
+                                    <td style="text-align: center">{{ currentAcceso.placa_vehiculo }}</td>
+                                    <td style="text-align: center">{{ currentAcceso.salida }} gln</td>
+                                    <td style="text-align: center">{{ currentAcceso.total }} gln</td>
+                                    <td style="white-space: nowrap;text-align: center">
+                                        <div class="buttons" ng-show="!rowform.$visible">
+                                            <a class="btn btn-xs btn-danger" ng-click="frmControlCombustible.del($index)">
+                                                <i class="fa fa-trash-o"></i>
+                                            </a>
+                                            <a class="btn btn-xs btn-orange" ng-click="frmControlCombustible.actualizar(currentAcceso)">
+                                                <i class="fa fa-hand-o-up"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center">Meta:</td>
+                                    <td colspan="5">{{ frmControlCombustible.meta }}</td>
+                                    <td style="text-align: center"></td>
+                                    <td style="text-align: center"></td>
+                                </tr>
+                                <tr ng-if="lista_cuadro.length == 0">
+                                    <td colspan="8" style="text-align: center; font-weight: bolder">
+                                        No hay datos para mostrar
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    REPORTE {% extends "propios/reporte_base_combustible.html" %} {% block titulo %}N° O/C {{ dato_general.nro_oc }}-2018
+    <br> {% endblock %} {% block contenido_inferior %}
+    <br>
+    <table>
+        <tr>
+            <td style="width: 49%;font-weight: bold">ARTICULO</td>
+            <td style="width: 2%;font-weight: bold">:</td>
+            <td style="width: 49%">{{ dato_general.descripcion }}</td>
+        </tr>
+        <tr>
+            <td style="width: 49%;font-weight: bold">RUC</td>
+            <td style="font-weight: bold">:</td>
+            <td>{{ dato_general.ruc }}</td>
+        </tr>
+        <tr>
+            <td style="width: 49%;font-weight: bold">RAZON SOCIAL</td>
+            <td style="font-weight: bold">:</td>
+            <td>{{ dato_general.razon_social }}</td>
+        </tr>
+        <tr>
+            <td style="width: 49%;font-weight: bold">CANTIDAD</td>
+            <td style="font-weight: bold">:</td>
+            <td>{{ dato_general.cantidad }} gal</td>
+        </tr>
+        <tr>
+            <td style="width: 49%;font-weight: bold">UNID. MEDIDA</td>
+            <td style="font-weight: bold">:</td>
+            <td>{{ dato_general.abreviatura }}</td>
+        </tr>
+        <tr>
+            <td style="width: 49%;font-weight: bold">FECHA NOTIFICACION</td>
+            <td style="font-weight: bold">:</td>
+            <td>{{ dato_general.fecha_notificacion }}</td>
+        </tr>
+    </table>
+    <br>
+    <div id="item">
+        <div id="detalle">
+            <table id="tabla_detalle" border-spacing=0 border-collapse=0>
+                <thead>
+                    <tr>
+                        <th height="50%" style="height: 100%; text-align:center; font-size: 15px" colspan="7">CONTROL VISIBLE DE COMBUSTIBLE
+                        </th>
+                    </tr>
+                    <tr>
+                        <th height="50%" style="height: 100%; text-align:center; font-size: 15px" colspan="7">
+                            <br>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th style="width:13%; text-align:center; font-size: 12px" rowspan="2">1. Fecha</th>
+                        <th style="font-size: 12px" colspan="3">2. Comprobante</th>
+                        <th style="font-size: 12px" colspan="3">3. Movimientos</th>
+                    </tr>
+                    <tr>
+                        <th style="width:10%; font-size: 12px">A. Nro Pecosa</th>
+                        <th style="width:10%; font-size: 12px">B. Vale Usuario</th>
+                        <th style="width:10%; font-size: 12px">C. Nro Vale</th>
+                        <th style="width:10%; font-size: 12px">A. Placa</th>
+                        <th style="width:10%; font-size: 12px">B. Salida</th>
+                        <th style="width:10%; font-size: 12px">C. Saldo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in detalle_ocompra %}
+                    <tr>
+                        <td style="font-size: 10px">{{ item.fecha }} </td>
+                        <td style="font-size: 10px">{{ item.nro_pecosa }} </td>
+                        <td style="font-size: 10px">{{ item.vale_usuario }}</td>
+                        <td style="font-size: 10px">{{ item.nro_vale }}</td>
+                        <td style="font-size: 10px">{{ item.placa_vehiculo }}</td>
+                        <td style="font-size: 10px">{{ item.salida }} gal</td>
+                        <td style="font-size: 10px">{{ item.resto }} gal</td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="7" style="font-size: 12px;font-weight: bold">
+                            <br>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" style="font-size: 12px;font-weight: bold">Meta</td>
+                        <td style="font-size: 12px;font-weight: bold">Salida total</td>
+                        <td style="font-size: 12px;font-weight: bold">Saldo</td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" style="text-align: left;font-size: 10px;padding-left: 1%">{{ meta.nro_meta }} - {{ meta.descripcion }}</td>
+                        <td style="font-size: 10px">{{ dato_general.salidatotal }} gal</td>
+                        <td style="font-size: 10px">{{ dato_general.totalconsumido }} gal</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endblock %} {% block firmas %}
+    <div id="base" style="position: fixed;bottom: -180px">
+        <table id="tabla_base">
+            <thead>
+                <tr>
+                    <th>
+                    </th>
+                    <th>
+                    </th>
+                    <th>
+                        <hr width="10%">
+                    </th>
+                    <th>
+                    </th>
+                    <th>
+                    </th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>Rocio Nuñes Cusiquispe
+                        <br>Res. Grifo Confraternidad</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    {% endblock %}
+    <script type="text/javascript" src="vendors/jquery/js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="vendors/bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<script src="app.js"></script>
+</body>
+
+</html>
